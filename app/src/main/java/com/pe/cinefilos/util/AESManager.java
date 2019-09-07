@@ -1,4 +1,4 @@
-package proguide.walleton.util;
+package com.pe.cinefilos.util;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -12,7 +12,7 @@ public class AESManager
 
 	}
 
-	public static Map<String, Object> encryptParams( Map<String, Object> p_parameters )
+	public static Map<String, Object> encryptParams(Map<String, Object> p_parameters )
 	{
 		return p_parameters;
 	}
@@ -30,7 +30,7 @@ public class AESManager
 		instance = p_instance;
 	}
 	
-	public AESManager( ArrayList<String> p_param )
+	public AESManager(ArrayList<String> p_param )
 	{
 		
 	}
@@ -41,7 +41,7 @@ public class AESManager
 		return null;
 	}
 	
-	public static String decrypt( String p_param )
+	public static String decrypt(String p_param )
 	{
 		return p_param;
 	}

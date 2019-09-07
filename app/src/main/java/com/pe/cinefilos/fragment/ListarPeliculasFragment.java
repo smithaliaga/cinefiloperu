@@ -1,16 +1,32 @@
 package com.pe.cinefilos.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import com.pe.cinefilos.PrincipalActivity;
 import com.pe.cinefilos.R;
+import com.pe.cinefilos.object.adapter.PeliculaAdapter;
+import com.pe.cinefilos.object.entities.EntityWSBase;
+import com.pe.cinefilos.object.entities.GetListMovie;
+import com.pe.cinefilos.object.entities.Movie;
+import com.pe.cinefilos.service.ApiService;
+import com.pe.cinefilos.service.Connection;
+import com.pe.cinefilos.util.Shared;
+import com.pe.cinefilos.util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +45,8 @@ public class ListarPeliculasFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ListView listView;
+    private Dialog pd;
 
     private OnFragmentInteractionListener mListener;
 
@@ -67,7 +85,58 @@ public class ListarPeliculasFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_listar_peliculas, container, false);
+        View view = inflater.inflate(R.layout.fragment_listar_peliculas, container, false);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        pd = Util.get_progress_dialog(getContext());
+        listView = (ListView) getView().findViewById(R.id.lvLista);
+
+        /*
+        List<Movie> peliculaList = new ArrayList<>();
+        Movie pelicula = new Movie();
+        pelicula.codigoPelicula = 1l;
+        pelicula.nombre = "AVENGERS END GAME";
+        pelicula.descripcion = "Los Vengadores restantes deben encontrar una manera de recuperar a sus aliados para un enfrentamiento épico con Thanos, el malvado que diezmó el planeta y el universo.";
+        pelicula.image = "http://i.imgur.com/DvpvklR.png";
+        pelicula.video = "http://techslides.com/demos/sample-videos/small.mp4";
+        peliculaList.add(pelicula);
+
+        pelicula = new Movie();
+        pelicula.codigoPelicula = 1l;
+        pelicula.nombre = "AVENGERS INFINITY WAR";
+        pelicula.descripcion = "Los superhéroes se alían para vencer al poderoso Thanos, el peor enemigo al que se han enfrentado. Si Thanos logra reunir las seis gemas del infinito: poder, tiempo, alma, realidad, mente y espacio, nadie podrá detenerlo.";
+        pelicula.image = "http://i.imgur.com/DvpvklR.png";
+        pelicula.video = "http://techslides.com/demos/sample-videos/small.mp4";
+        peliculaList.add(pelicula);
+
+        pelicula = new Movie();
+        pelicula.codigoPelicula = 1l;
+        pelicula.nombre = "CAPITAN AMERICA CIVIL WAR";
+        pelicula.descripcion = "Después de que otro incidente internacional, en el que se ven envueltos los Vengadores, produzca daños colaterales, la presión política obliga a poner en marcha un sistema para depurar responsabilidades.";
+        pelicula.image = "http://i.imgur.com/DvpvklR.png";
+        pelicula.video = "http://techslides.com/demos/sample-videos/small.mp4";
+        peliculaList.add(pelicula);
+
+        pelicula = new Movie();
+        pelicula.codigoPelicula = 1l;
+        pelicula.nombre = "NOMBRE4";
+        pelicula.descripcion = "DESCRI4";
+        pelicula.image = "https://en.wikipedia.org/wiki/Image#/media/File:Image_created_with_a_mobile_phone.png";
+        pelicula.video = "http://techslides.com/demos/sample-videos/small.mp4";
+        peliculaList.add(pelicula);
+
+        PeliculaAdapter adapter = new PeliculaAdapter(getContext(), new ArrayList<Movie>(peliculaList));
+        listView = (ListView) view.findViewById(R.id.lvLista);
+        listView.setAdapter(adapter);
+        */
+
+        showDialog();
+        ApiService.GetInstance().WS_GetListMovie(getContext(),handerGetListMovie,new Shared(getContext()).getToken());
+
+        super.onViewCreated(view, savedInstanceState );
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -107,5 +176,37 @@ public class ListarPeliculasFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private Handler handerGetListMovie = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            try{
+                GetListMovie response = Connection.process_handler(msg, getContext(), GetListMovie.class);
+                if (response != null) {
+                    EntityWSBase entityWSBase = Util.getEntityWSBase(msg);
+                    if(entityWSBase.errorCode == 0){
+                        PeliculaAdapter adapter = new PeliculaAdapter(getContext(), new ArrayList<Movie>(response.lista));
+                        listView.setAdapter(adapter);
+                    } else{
+                        Util.dialog_msg(getActivity(),entityWSBase.errorMessage).show();
+                    }
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }finally {
+                hideDialog();
+            }
+        }
+    };
+
+    private void showDialog(){
+        if (pd != null)
+            pd.show();
+    }
+
+    private void hideDialog(){
+        if (pd != null && pd.isShowing())
+            pd.dismiss();
     }
 }

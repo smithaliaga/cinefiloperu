@@ -5,45 +5,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
-import androidx.fragment.app.FragmentManager;
-
-import com.pe.cinefilos.PrincipalActivity;
 import com.pe.cinefilos.R;
-import com.pe.cinefilos.fragment.DetallePeliculaFragment;
-import com.pe.cinefilos.object.entities.Pelicula;
-import com.pe.cinefilos.util.ImageDownloaderTask;
+import com.pe.cinefilos.object.entities.TriviaRespuesta;
 
 import java.util.ArrayList;
 
-public class PeliculaAdapter extends ArrayAdapter<Pelicula> {
+public class TriviaRespuestaAdapter extends ArrayAdapter<TriviaRespuesta> {
+
+    public int selectedPosition = -1;
 
     private static class ViewHolder {
         View view;
-        TextView tvNombre, tvDescripcion;
-        ImageView ivImagen;
+        CheckBox cbTriviaRespuesta;
     }
 
-    public PeliculaAdapter(Context context, ArrayList<Pelicula> list) {
-        super(context, R.layout.pelicula_fila, list);
+    public TriviaRespuestaAdapter(Context context, ArrayList<TriviaRespuesta> list) {
+        super(context, R.layout.trivia_respuesta_fila, list);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        final Pelicula pelicula = getItem(position);
+        final TriviaRespuesta triviaRespuesta = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
         if (convertView == null) {
             // If there's no view to re-use, inflate a brand new view for row
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.pelicula_fila, parent, false);
-            viewHolder.tvNombre = (TextView) convertView.findViewById(R.id.tvNombre);
-            viewHolder.tvDescripcion = (TextView) convertView.findViewById(R.id.tvDescripcion);
-            viewHolder.ivImagen = (ImageView) convertView.findViewById(R.id.ivImagen) ;
+            convertView = inflater.inflate(R.layout.trivia_respuesta_fila, parent, false);
+            viewHolder.cbTriviaRespuesta = (CheckBox) convertView.findViewById(R.id.cbTriviaRespuesta);
             viewHolder.view = convertView;
             //viewHolder.home = (TextView) convertView.findViewById(R.id.tvHome);
             // Cache the viewHolder object inside the fresh view
@@ -54,15 +48,14 @@ public class PeliculaAdapter extends ArrayAdapter<Pelicula> {
         }
         // Populate the data from the data object via the viewHolder object
         // into the template view.
-        viewHolder.tvNombre.setText(pelicula.nombre);
-        viewHolder.tvDescripcion.setText(pelicula.descripcion);
-        new ImageDownloaderTask(viewHolder.ivImagen).execute(pelicula.image);
-
-        viewHolder.view.setOnClickListener(new View.OnClickListener() {
+        viewHolder.cbTriviaRespuesta.setTag(position);
+        viewHolder.cbTriviaRespuesta.setChecked(position == selectedPosition);
+        viewHolder.cbTriviaRespuesta.setText(triviaRespuesta.respuesta);
+        viewHolder.cbTriviaRespuesta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager fragmentManager = ((PrincipalActivity)getContext()).getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.contenedor, new DetallePeliculaFragment(pelicula)).addToBackStack("my_fragment").commit();
+                selectedPosition = (Integer)view.getTag();
+                notifyDataSetChanged();
             }
         });
         // Return the completed view to render on screen

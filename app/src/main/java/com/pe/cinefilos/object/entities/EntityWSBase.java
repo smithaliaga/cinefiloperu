@@ -1,7 +1,6 @@
-package proguide.walleton.objects.entities;
+package com.pe.cinefilos.object.entities;
 
-public class EntityWSBase
-{	 
-	 public int     ErrorCode;
-	 public String  Description;
+public class EntityWSBase {
+    public int errorCode;
+    public String errorMessage;
 }

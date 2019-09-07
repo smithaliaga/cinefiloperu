@@ -1,51 +1,71 @@
-package com.example.clase03.adapter;
+package com.pe.cinefilos.object.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentManager;
 
-import com.example.clase03.R;
-import com.example.clase03.model.Pelicula;
+import com.pe.cinefilos.PrincipalActivity;
+import com.pe.cinefilos.R;
+import com.pe.cinefilos.fragment.DetallePeliculaFragment;
+import com.pe.cinefilos.object.entities.Movie;
+import com.pe.cinefilos.util.ImageDownloaderTask;
 
-import java.util.List;
+import java.util.ArrayList;
 
-public class PeliculasAdapter extends RecyclerView.Adapter<PeliculasAdapter.MyViewHolder> {
-    private List<Pelicula> peliculasList;
+public class PeliculaAdapter extends ArrayAdapter<Movie> {
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView titulo, genero, año;
+    private static class ViewHolder {
+        View view;
+        TextView tvNombre, tvDescripcion;
+        ImageView ivImagen;
+    }
 
-        public MyViewHolder(View view) {
-            super(view);
-            titulo = (TextView) view.findViewById(R.id.titulo);
-            genero = (TextView) view.findViewById(R.id.genero);
-            año = (TextView) view.findViewById(R.id.año);
+    public PeliculaAdapter(Context context, ArrayList<Movie> list) {
+        super(context, R.layout.pelicula_fila, list);
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        // Get the data item for this position
+        final Movie pelicula = getItem(position);
+        // Check if an existing view is being reused, otherwise inflate the view
+        ViewHolder viewHolder; // view lookup cache stored in tag
+        if (convertView == null) {
+            // If there's no view to re-use, inflate a brand new view for row
+            viewHolder = new ViewHolder();
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            convertView = inflater.inflate(R.layout.pelicula_fila, parent, false);
+            viewHolder.tvNombre = (TextView) convertView.findViewById(R.id.tvNombre);
+            viewHolder.tvDescripcion = (TextView) convertView.findViewById(R.id.tvDescripcion);
+            viewHolder.ivImagen = (ImageView) convertView.findViewById(R.id.ivImagen) ;
+            viewHolder.view = convertView;
+            //viewHolder.home = (TextView) convertView.findViewById(R.id.tvHome);
+            // Cache the viewHolder object inside the fresh view
+            convertView.setTag(viewHolder);
+        } else {
+            // View is being recycled, retrieve the viewHolder object from tag
+            viewHolder = (ViewHolder) convertView.getTag();
         }
-    }
+        // Populate the data from the data object via the viewHolder object
+        // into the template view.
+        viewHolder.tvNombre.setText(pelicula.nombre);
+        viewHolder.tvDescripcion.setText(pelicula.descripcion);
+        new ImageDownloaderTask(viewHolder.ivImagen).execute(pelicula.image);
 
-    public PeliculasAdapter(List<Pelicula> peliculasList) {
-        this.peliculasList = peliculasList;
-    }
-
-    @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.pelicula_fila, parent, false);
-        return new MyViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        Pelicula pelicula = peliculasList.get(position);
-        holder.titulo.setText(pelicula.getTitulo());
-        holder.genero.setText(pelicula.getGenero());
-        holder.año.setText(pelicula.getAño());
-    }
-
-    @Override
-    public int getItemCount() {
-        return peliculasList.size();
+        viewHolder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = ((PrincipalActivity)getContext()).getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.contenedor, new DetallePeliculaFragment(pelicula)).addToBackStack("my_fragment").commit();
+            }
+        });
+        // Return the completed view to render on screen
+        return convertView;
     }
 }

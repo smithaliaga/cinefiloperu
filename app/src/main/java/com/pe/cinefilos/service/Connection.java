@@ -1,4 +1,4 @@
-package com.pe.cinefilos.util;
+package com.pe.cinefilos.service;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -23,6 +23,9 @@ import com.pe.cinefilos.MainActivity;
 import com.pe.cinefilos.R;
 import com.pe.cinefilos.exception.AsyncConnectionException;
 import com.pe.cinefilos.object.entities.EntityWSBase;
+import com.pe.cinefilos.util.AESManager;
+import com.pe.cinefilos.util.App;
+import com.pe.cinefilos.util.Util;
 
 import android.content.Context;
 import android.content.Intent;
@@ -155,9 +158,8 @@ public class Connection {
         try {
             switch (p_message.arg1) {
                 case Connection.CONNECTION_OK:
-
                     String json_response = AESManager.decrypt((String) p_message.obj);
-
+                    System.out.println("json_response:" + json_response);
                     if (json_response == null || json_response.isEmpty()) {
                         throw new AsyncConnectionException(p_context.getResources().getString(R.string.connection_noconnection));
                     } else {
@@ -165,35 +167,15 @@ public class Connection {
                         if (response instanceof EntityWSBase) {
 
                             switch (((EntityWSBase) response).errorCode) {
-                                case 0:
-                                    return response;
-
                                 case 100: {
                                     Intent intent = new Intent(p_context, MainActivity.class);
                                     //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     p_context.startActivity(intent);
-                                    throw new AsyncConnectionException(((EntityWSBase) response).errorMessage);
-                                    //break;
+                                    throw new AsyncConnectionException(p_context.getResources().getString(R.string.session_expired));
                                 }
-                                case -43:
-                                    return response;
-
                                 default: {
-                                    // Codigo para determinar el lenguaje del "session expired"
-                                    String language = Util.getLanguage();
-                                    String mensajeSesionExpirada = p_context.getResources().getString(R.string.session_expired);
-                                    if (language.equals("es-AR")) {
-                                        mensajeSesionExpirada = p_context.getResources().getString(R.string.session_expired);
-                                    }
-                                    //--------------------
-
-                                    if (((EntityWSBase) response).errorCode == 100) {
-                                        throw new AsyncConnectionException(mensajeSesionExpirada);
-                                    } else {
-                                        throw new AsyncConnectionException(((EntityWSBase) response).errorMessage);
-                                    }
-
+                                    return response;
                                 }
                             }
                         } /////////////
@@ -203,15 +185,11 @@ public class Connection {
                     throw new AsyncConnectionException(p_context.getResources().getString(R.string.connection_noconnection)); //
                 }
             }
-        } catch (AsyncConnectionException err) {
-
-            if (err.toString().indexOf("Your request can not be processed") > -1) {
-                Util.show_toast(p_context, p_context.getResources().getString(R.string.connection_noconnection));
-            } else {
-
-                Util.show_toast(p_context, err.getMessage()); //AQUI SE GENERA EL ERROR DE SISTEMA
-            }
+        } catch (AsyncConnectionException ex) {
+            ex.printStackTrace();
+            Util.show_toast(p_context, ex.getMessage());
         } catch (Exception ex) {
+            ex.printStackTrace();
             Util.show_toast(p_context, p_context.getResources().getString(R.string.connection_noconnection));
         }
         return null;

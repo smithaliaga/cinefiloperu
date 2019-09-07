@@ -1,10 +1,13 @@
 package com.pe.cinefilos;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.os.StrictMode;
 import android.view.View;
 
 import androidx.core.view.GravityCompat;
@@ -13,16 +16,32 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.pe.cinefilos.fragment.DetallePeliculaFragment;
+import com.pe.cinefilos.fragment.ListarPeliculasFragment;
+import com.pe.cinefilos.fragment.MisDatosFragment;
+import com.pe.cinefilos.fragment.TriviaFragment;
+import com.pe.cinefilos.fragment.TriviaResultadoFragment;
+import com.pe.cinefilos.fragment.UbicacionCinesFragment;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.Menu;
 
+import java.util.List;
+
 public class PrincipalActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ListarPeliculasFragment.OnFragmentInteractionListener,
+        MisDatosFragment.OnFragmentInteractionListener,
+        TriviaFragment.OnFragmentInteractionListener,
+        UbicacionCinesFragment.OnFragmentInteractionListener,
+        DetallePeliculaFragment.OnFragmentInteractionListener,
+        TriviaResultadoFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +49,7 @@ public class PrincipalActivity extends AppCompatActivity
         setContentView(R.layout.activity_principal);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -45,10 +57,22 @@ public class PrincipalActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.contenedor, new MisDatosFragment()).commit();
+
+        StrictMode.ThreadPolicy policy = new
+                StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     @Override
     public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+            return;
+        }
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -66,6 +90,7 @@ public class PrincipalActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        System.out.println("entro onOptionsItemSelected");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -85,22 +110,35 @@ public class PrincipalActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_tools) {
-
+        if (id == R.id.nav_mis_datos) {
+            fragmentManager.beginTransaction().replace(R.id.contenedor, new MisDatosFragment()).commit();
+        } else if (id == R.id.nav_lista_peliculas) {
+            fragmentManager.beginTransaction().replace(R.id.contenedor, new ListarPeliculasFragment()).commit();
+        } else if (id == R.id.nav_trivia) {
+            fragmentManager.beginTransaction().replace(R.id.contenedor, new TriviaFragment()).commit();
+        } else if (id == R.id.nav_ubicacion_cines) {
+            fragmentManager.beginTransaction().replace(R.id.contenedor, new UbicacionCinesFragment()).commit();
         } else if (id == R.id.nav_share) {
+            String message = "Prueba Cinefilos, es ideal para mantenerte al día en las películas de estreno y ganar premios. Descarga gratuita en https://cineperu.herokuapp.com";
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("text/plain");
+            share.putExtra(Intent.EXTRA_TEXT, message);
 
-        } else if (id == R.id.nav_send) {
-
+            startActivity(Intent.createChooser(share, "Compartir Cinefilos"));
+        } else if (id == R.id.nav_cerrar_sesion) {
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

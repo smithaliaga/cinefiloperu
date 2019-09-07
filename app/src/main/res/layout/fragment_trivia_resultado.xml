@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.TriviaResultadoFragment">
+    tools:context=".fragment.TriviaResultadoFragment"
+    android:layout_margin="10dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical">
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Usted ha ganado un premio"
+           android:textColor="@android:color/holo_blue_dark"
+           android:textSize="24dp"
+           android:layout_gravity="center_horizontal"
+           android:gravity="center_horizontal"/>
+
+       <ImageView
+           android:id="@+id/imageView3"
+           android:layout_width="match_parent"
+           android:layout_height="300dp"
+           android:src="@drawable/img_trofeo" />
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Para cobrar su premio, deberá acercarse al establecimiento de cine más cercano con su documento de identidad y podrá descubrir su premio."
+           android:textColor="#8D8FA2"
+           android:textSize="18dp"
+           android:layout_gravity="center_horizontal"
+           android:gravity="center_horizontal"/>
+   </LinearLayout>
 
 </FrameLayout>

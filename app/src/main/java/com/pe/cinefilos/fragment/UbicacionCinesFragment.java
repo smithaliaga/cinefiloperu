@@ -1,34 +1,35 @@
 package com.pe.cinefilos.fragment;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.pe.cinefilos.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link UbicacionCinesFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link UbicacionCinesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class UbicacionCinesFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class UbicacionCinesFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private GoogleMap mMap;
+    private final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
 
     private OnFragmentInteractionListener mListener;
 
@@ -36,38 +37,22 @@ public class UbicacionCinesFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment UbicacionCinesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static UbicacionCinesFragment newInstance(String param1, String param2) {
-        UbicacionCinesFragment fragment = new UbicacionCinesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ubicacion_cines, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_ubicacion_cines, container, false);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -107,5 +92,95 @@ public class UbicacionCinesFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    try{
+                        LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+                        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, (LocationListener) this);
+                        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 5, (LocationListener) this);
+                    }catch (SecurityException ex){
+                        ex.printStackTrace();
+                    }
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        // Add a marker in Sydney and move the camera
+
+        LatLng cinefilosRisso = new LatLng(-12.085507, -77.034625);
+        LatLng cinefilosSalaverry = new LatLng(-12.089494, -77.052604);
+        mMap.addMarker(new
+                MarkerOptions().position(cinefilosRisso).title("Cinefilos Risso"));
+        mMap.addMarker(new
+                MarkerOptions().position(cinefilosSalaverry).title("Cinefilos Salaverry"));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cinefilosSalaverry, 12.0f));
+
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+                // MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
+            LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 5, (LocationListener) this);
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 5, (LocationListener) this);
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        LatLng myCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myCurrentLocation, 14.0f));
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+        System.out.println("onStatusChanged");
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+        System.out.println("onProviderEnabled");
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+        System.out.println("onProviderDisabled");
     }
 }

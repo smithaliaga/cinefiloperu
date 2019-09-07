@@ -7,7 +7,5 @@
     <item
     	android:drawable="@drawable/shape_button_pressed"
         android:state_pressed="true"/>
-    
 
-    
 </selector>

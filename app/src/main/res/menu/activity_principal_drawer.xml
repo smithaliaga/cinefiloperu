@@ -5,21 +5,21 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
+            android:id="@+id/nav_mis_datos"
+            android:icon="@drawable/vector_mis_datos"
+            android:title="Mis Datos" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
+            android:id="@+id/nav_lista_peliculas"
+            android:icon="@drawable/vector_peliculas"
+            android:title="Ver Películas" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:id="@+id/nav_trivia"
+            android:icon="@drawable/vector_trivia"
+            android:title="Trivia" />
         <item
-            android:id="@+id/nav_tools"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/menu_tools" />
+            android:id="@+id/nav_ubicacion_cines"
+            android:icon="@drawable/vector_mapa_cines"
+            android:title="Mapa de Cines" />
     </group>
 
     <item android:title="Communicate">
@@ -29,9 +29,9 @@
                 android:icon="@drawable/ic_menu_share"
                 android:title="@string/menu_share" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/menu_send" />
+                android:id="@+id/nav_cerrar_sesion"
+                android:icon="@drawable/vector_cerrar_sesion"
+                android:title="Cerrar Sesión" />
         </menu>
     </item>
 

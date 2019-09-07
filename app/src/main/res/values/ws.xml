@@ -1,2 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+
+    <string name="WS_url">https://cineperu.herokuapp.com//api/</string>
+    <!--<string name="WS_url">http://192.168.43.:8080/api/216</string>-->
+
+    <string name="WS_UserAuthenticate">WS_UserAuthenticate</string>
+    <string name="WS_ProcessQR">WS_ProcessQR</string>
+    <string name="WS_GetListMovie">WS_GetListMovie</string>
+    <string name="WS_GetListTrivia">WS_GetListTrivia</string>
+    <string name="WS_RegisterIntentTrivia">WS_RegisterIntentTrivia</string>
+    <string name="WS_GetTriviaUser">WS_GetTriviaUser</string>
+    <string name="WS_SendException">WS_SendException</string>
+    <string name="WS_RegisterUser">WS_RegisterUser</string>
+    <string name="WS_UserGetInformation">WS_UserGetInformation</string>
+    <string name="WS_UserUpdateInformation">WS_UserUpdateInformation</string>
+</resources>

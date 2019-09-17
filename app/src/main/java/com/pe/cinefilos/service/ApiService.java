@@ -20,7 +20,7 @@ public class ApiService {
         return apiService;
     }
 
-    public void WS_UserAuthenticate(Context p_context, Handler p_handler, String usuario, String clave, String idioma, String infoDispositivo) {
+    public void WS_UserAuthenticate(Context p_context, Handler p_handler, String usuario, String clave, String idioma, String infoDispositivo, String tokenFirebase) {
         String METHOD_NAME = p_context.getResources().getString(R.string.WS_UserAuthenticate);
         String URL = p_context.getResources().getString(R.string.WS_url);
 
@@ -29,6 +29,7 @@ public class ApiService {
         parameters.put("clave", clave);
         parameters.put("idioma", idioma);
         parameters.put("infoDispositivo", infoDispositivo);
+        parameters.put("tokenFirebase", tokenFirebase);
 
         parameters = AESManager.encryptParams(parameters);
 

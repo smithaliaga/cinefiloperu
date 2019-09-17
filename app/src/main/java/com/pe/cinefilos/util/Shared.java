@@ -16,6 +16,7 @@ public class Shared {
     private static final String KEY_USER = "USER";
     private static final String KEY_TOKEN = "TOKEN";
     private static final String KEY_ALIAS = "ALIAS";
+    private static final String KEY_TOKEN_FIREBASE = "TOKEN_FIREBASE";
 
     public Shared(Context context) {
         pref_data = context.getSharedPreferences(SHARED_NAME, Context.MODE_PRIVATE);
@@ -78,4 +79,13 @@ public class Shared {
         return pref_data.getString(KEY_ALIAS, null);
     }
 
+    public void setTokenFireBase(String p_token_firebase) {
+        Editor editor_data = pref_data.edit();
+        editor_data.putString(KEY_TOKEN_FIREBASE, p_token_firebase);
+        editor_data.commit();
+    }
+
+    public String getTokenFireBase() {
+        return pref_data.getString(KEY_TOKEN_FIREBASE, null);
+    }
 }

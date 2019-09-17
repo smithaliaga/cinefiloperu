@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     showDialog();
                     Shared shared = new Shared(getApplicationContext());
                     shared.setUser(usuario);
-                    ApiService.GetInstance().WS_UserAuthenticate(getApplicationContext(),handerUserAuthenticate, usuario, clave,"","");
+                    ApiService.GetInstance().WS_UserAuthenticate(getApplicationContext(),handerUserAuthenticate, usuario, clave,"","", shared.getTokenFireBase());
                 }
             }
         });

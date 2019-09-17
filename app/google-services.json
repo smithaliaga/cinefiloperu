@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "373599987324",
+    "firebase_url": "https://cinefilos-bcb6a.firebaseio.com",
+    "project_id": "cinefilos-bcb6a",
+    "storage_bucket": "cinefilos-bcb6a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:373599987324:android:9b2c073b181ebad4020bf9",
+        "android_client_info": {
+          "package_name": "com.pe.cinefilos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "373599987324-sk8cbrldvari2p7jb395523ptjsverfv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAE-0fKXa7GI1K9yvnLYRk8J0N3jnXTHKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "373599987324-sk8cbrldvari2p7jb395523ptjsverfv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

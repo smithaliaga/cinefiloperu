@@ -170,4 +170,17 @@ public class ApiService {
         conn = new Connection(URL + "/" + METHOD_NAME, p_handler, parameters);
         conn.startAsync();
     }
+
+    public void WS_RecoveryPassword(Context p_context, Handler p_handler, String usuario) {
+        String METHOD_NAME = p_context.getResources().getString(R.string.WS_RecoveryPassword);
+        String URL = p_context.getResources().getString(R.string.WS_url);
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("usuario", usuario);
+
+        parameters = AESManager.encryptParams(parameters);
+
+        conn = new Connection(URL + "/" + METHOD_NAME, p_handler, parameters);
+        conn.startAsync();
+    }
 }

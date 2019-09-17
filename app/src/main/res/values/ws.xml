@@ -14,4 +14,5 @@
     <string name="WS_RegisterUser">WS_RegisterUser</string>
     <string name="WS_UserGetInformation">WS_UserGetInformation</string>
     <string name="WS_UserUpdateInformation">WS_UserUpdateInformation</string>
+    <string name="WS_RecoveryPassword">WS_RecoveryPassword</string>
 </resources>

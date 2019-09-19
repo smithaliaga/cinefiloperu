@@ -32,19 +32,20 @@ public class MyAndroidFirebaseMsgService extends FirebaseMessagingService {
 
         super.onMessageReceived(remoteMessage);
         Log.i("==========>", "De: " + remoteMessage.getFrom());
-        Log.i("==========>", "Mensaje: " + remoteMessage.getNotification().getBody());
+        //Log.i("==========>", "Mensaje: " + remoteMessage.getNotification().getBody());
 
         if (remoteMessage.getData().size() > 0) {
             Log.i("======>", "Message data payload: " + remoteMessage.getData());
             Map<String, String> data = remoteMessage.getData();
+            createNotification(data.get("detail"), data.get("title"));
         } else if (remoteMessage.getNotification() != null) {
             Log.i("======>", "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            createNotification(remoteMessage.getNotification().getBody());
+            createNotification(remoteMessage.getNotification().getBody(), "CINEFILOS");
         }
 
     }
 
-    private void createNotification( String messageBody) {
+    private void createNotification(String messageBody, String messageTitle) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHANNEL_ID = "my_channel_id_01";
 
@@ -71,7 +72,7 @@ public class MyAndroidFirebaseMsgService extends FirebaseMessagingService {
                 .setContentIntent(actionPendingIntent)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
-                .setContentTitle("Curso de Android")
+                .setContentTitle(messageTitle)
                 //.setSound(Uri.parse("android.resource://"+getPackageName()+"/" + R.raw.beeep))
                 .setContentText(messageBody)
                 .setAutoCancel(true)

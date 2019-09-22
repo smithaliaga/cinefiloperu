@@ -224,9 +224,13 @@ public class UbicacionCinesFragment extends Fragment implements OnMapReadyCallba
                 if (getListCine != null) {
                     if (getListCine.errorCode == 0) {
                         listaCine = new ArrayList<>(getListCine.lista);
+                        for(Cine cine : listaCine){
+                            LatLng ubicacion = new LatLng(cine.latitud, cine.longitud);
+                            mMap.addMarker(new
+                                    MarkerOptions().position(ubicacion).title(cine.nombre));
+                        }
                     } else {
                         Util.dialog_msg(getActivity(), getListCine.errorMessage).show();
-
                     }
                 }
             } catch (Exception ex) {

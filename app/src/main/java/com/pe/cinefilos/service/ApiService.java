@@ -183,4 +183,17 @@ public class ApiService {
         conn = new Connection(URL + "/" + METHOD_NAME, p_handler, parameters);
         conn.startAsync();
     }
+
+    public void WS_GetListCine(Context p_context, Handler p_handler, String token) {
+        String METHOD_NAME = p_context.getResources().getString(R.string.WS_GetListCine);
+        String URL = p_context.getResources().getString(R.string.WS_url);
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("token", token);
+
+        parameters = AESManager.encryptParams(parameters);
+
+        conn = new Connection(URL + "/" + METHOD_NAME, p_handler, parameters);
+        conn.startAsync();
+    }
 }

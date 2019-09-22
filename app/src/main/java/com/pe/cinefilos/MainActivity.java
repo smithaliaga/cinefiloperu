@@ -1,17 +1,23 @@
 package com.pe.cinefilos;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +34,7 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private Dialog pd;
+    private final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +43,37 @@ public class MainActivity extends AppCompatActivity {
 
         pd = Util.get_progress_dialog(this);
 
-        ((TextView)findViewById(R.id.username)).setText("baliaga");
-        ((TextView)findViewById(R.id.password)).setText("1234");
+        String currentUser = new Shared(getApplicationContext()).getUser();
+        EditText username = (EditText) findViewById(R.id.username);
+        username.setText(currentUser == null ? "":currentUser);
+        if (username != null){
+            EditText password = (EditText) findViewById(R.id.password);
+            password.requestFocus();
+        } else{
+            username.requestFocus();
+        }
+
+        ImageView ivCall = (ImageView) findViewById(R.id.ivCall);
+        ivCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.CALL_PHONE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
+                            Manifest.permission.CALL_PHONE)) {
+
+                    } else {
+                        ActivityCompat.requestPermissions(MainActivity.this,
+                                new String[]{Manifest.permission.CALL_PHONE},
+                                MY_PERMISSIONS_REQUEST_CALL_PHONE);
+
+                    }
+                } else {
+                    realizarLlamada();
+                }
+            }
+        });
 
         TextView tvRecuperaPass = (TextView)findViewById(R.id.link_recupera_pass);
         tvRecuperaPass.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +112,36 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    private void realizarLlamada(){
+        try{
+            if (ContextCompat.checkSelfPermission(MainActivity.this,
+                    Manifest.permission.CALL_PHONE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:972939642"));
+                startActivity(i);
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CALL_PHONE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    realizarLlamada();
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
     }
 
     private Handler handerUserAuthenticate = new Handler() {

@@ -52,8 +52,8 @@ public class Connection {
 
         HttpParams basic_http_params = new BasicHttpParams();
 
-        HttpConnectionParams.setConnectionTimeout(basic_http_params, 200 * 1000);
-        HttpConnectionParams.setSoTimeout(basic_http_params, 200 * 1000);
+        HttpConnectionParams.setConnectionTimeout(basic_http_params, 60 * 1000);
+        HttpConnectionParams.setSoTimeout(basic_http_params, 60 * 1000);
 
         httpClient = new DefaultHttpClient(basic_http_params);
         httpClient.getParams().setParameter(ClientPNames.COOKIE_POLICY, CookiePolicy.RFC_2109);

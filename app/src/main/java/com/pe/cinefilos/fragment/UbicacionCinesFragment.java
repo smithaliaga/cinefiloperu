@@ -1,6 +1,7 @@
 package com.pe.cinefilos.fragment;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -14,6 +15,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +28,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pe.cinefilos.R;
+import com.pe.cinefilos.object.entities.Cine;
+import com.pe.cinefilos.object.entities.GetListCine;
+import com.pe.cinefilos.service.ApiService;
+import com.pe.cinefilos.service.Connection;
+import com.pe.cinefilos.util.Shared;
+import com.pe.cinefilos.util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UbicacionCinesFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
@@ -32,6 +44,8 @@ public class UbicacionCinesFragment extends Fragment implements OnMapReadyCallba
     private final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
 
     private OnFragmentInteractionListener mListener;
+    private Dialog pd;
+    private List<Cine> listaCine = new ArrayList<>();
 
     public UbicacionCinesFragment() {
         // Required empty public constructor
@@ -53,6 +67,16 @@ public class UbicacionCinesFragment extends Fragment implements OnMapReadyCallba
         mapFragment.getMapAsync(this);
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        pd = Util.get_progress_dialog(getContext());
+
+        showDialog();
+        ApiService.GetInstance().WS_GetListCine(getContext(), handlerGetListCine, new Shared(getContext()).getToken());
+
+        super.onViewCreated(view, savedInstanceState);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -128,13 +152,21 @@ public class UbicacionCinesFragment extends Fragment implements OnMapReadyCallba
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
 
-        LatLng cinefilosRisso = new LatLng(-12.085507, -77.034625);
-        LatLng cinefilosSalaverry = new LatLng(-12.089494, -77.052604);
-        mMap.addMarker(new
-                MarkerOptions().position(cinefilosRisso).title("Cinefilos Risso"));
-        mMap.addMarker(new
-                MarkerOptions().position(cinefilosSalaverry).title("Cinefilos Salaverry"));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cinefilosSalaverry, 12.0f));
+        if (listaCine.isEmpty()){
+            LatLng cinefilosRisso = new LatLng(-12.085507, -77.034625);
+            LatLng cinefilosSalaverry = new LatLng(-12.089494, -77.052604);
+            mMap.addMarker(new
+                    MarkerOptions().position(cinefilosRisso).title("Cinefilos Risso"));
+            mMap.addMarker(new
+                    MarkerOptions().position(cinefilosSalaverry).title("Cinefilos Salaverry"));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cinefilosSalaverry, 12.0f));
+        } else {
+            for(Cine cine : listaCine){
+                LatLng ubicacion = new LatLng(cine.latitud, cine.longitud);
+                mMap.addMarker(new
+                        MarkerOptions().position(ubicacion).title(cine.nombre));
+            }
+        }
 
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -182,5 +214,36 @@ public class UbicacionCinesFragment extends Fragment implements OnMapReadyCallba
     @Override
     public void onProviderDisabled(String s) {
         System.out.println("onProviderDisabled");
+    }
+
+    private Handler handlerGetListCine = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            try {
+                GetListCine getListCine = Connection.process_handler(msg, getContext(), GetListCine.class);
+                if (getListCine != null) {
+                    if (getListCine.errorCode == 0) {
+                        listaCine = new ArrayList<>(getListCine.lista);
+                    } else {
+                        Util.dialog_msg(getActivity(), getListCine.errorMessage).show();
+
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                hideDialog();
+            }
+        }
+    };
+
+    private void showDialog() {
+        if (pd != null)
+            pd.show();
+    }
+
+    private void hideDialog() {
+        if (pd != null && pd.isShowing())
+            pd.dismiss();
     }
 }

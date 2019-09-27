@@ -59,7 +59,9 @@ public class TriviaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_trivia, container, false);
+        View view = inflater.inflate(R.layout.fragment_trivia, container, false);
+        getActivity().setTitle("TRIVIA DEL DÍA");
+        return view;
     }
 
     @Override

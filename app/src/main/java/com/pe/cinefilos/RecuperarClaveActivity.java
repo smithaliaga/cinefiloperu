@@ -26,6 +26,8 @@ public class RecuperarClaveActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recuperar_clave);
+        setTitle("RECUPERAR CONTRASEÑA");
+
         pd = Util.get_progress_dialog(this);
 
         final Button btnRecupera = findViewById(R.id.btnRecuperaPass);

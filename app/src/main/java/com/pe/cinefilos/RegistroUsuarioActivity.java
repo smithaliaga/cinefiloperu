@@ -29,6 +29,7 @@ public class RegistroUsuarioActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro_usuario);
+        setTitle("REGISTRO DE USUARIO");
 
         pd = Util.get_progress_dialog(this);
 

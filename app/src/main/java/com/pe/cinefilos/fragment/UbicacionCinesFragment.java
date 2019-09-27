@@ -62,6 +62,7 @@ public class UbicacionCinesFragment extends Fragment implements OnMapReadyCallba
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_ubicacion_cines, container, false);
+        getActivity().setTitle("UBICACIÓN DE CINES");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);

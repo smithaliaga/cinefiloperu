@@ -22,6 +22,7 @@ import com.pe.cinefilos.fragment.MisDatosFragment;
 import com.pe.cinefilos.fragment.TriviaFragment;
 import com.pe.cinefilos.fragment.TriviaResultadoFragment;
 import com.pe.cinefilos.fragment.UbicacionCinesFragment;
+import com.pe.cinefilos.util.Shared;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -31,6 +32,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.view.Menu;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -52,6 +56,10 @@ public class PrincipalActivity extends AppCompatActivity
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView tvUsuario = (TextView) headerView.findViewById(R.id.tvUsuario);
+        tvUsuario.setText("Bienvenido: " + new Shared(this).getUser());
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);

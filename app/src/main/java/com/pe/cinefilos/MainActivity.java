@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
             username.requestFocus();
         }
 
+        ((TextView)findViewById(R.id.password)).setText("1234");
+
         ImageView ivCall = (ImageView) findViewById(R.id.ivCall);
         ivCall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +112,15 @@ public class MainActivity extends AppCompatActivity {
                     shared.setUser(usuario);
                     ApiService.GetInstance().WS_UserAuthenticate(getApplicationContext(),handerUserAuthenticate, usuario, clave,"","", shared.getTokenFireBase());
                 }
+            }
+        });
+
+        Button btnInvitado = findViewById(R.id.btnInvitado);
+        btnInvitado.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), PrincipalActivity.class);
+                startActivity(i);
             }
         });
     }

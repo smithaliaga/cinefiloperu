@@ -6,16 +6,19 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.pe.cinefilos.PrincipalActivity;
 import com.pe.cinefilos.R;
 import com.pe.cinefilos.object.entities.EntityWSBase;
 import com.pe.cinefilos.object.entities.GetListMovie;
@@ -63,12 +66,21 @@ public class DetallePeliculaFragment extends Fragment {
         tvTitulo.setText(peliculaSelected.nombre);
         tvDescripcion.setText(peliculaSelected.descripcion);
 
+        Button btnComprar = view.findViewById(R.id.btnComprar);
+        btnComprar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = ((PrincipalActivity)getContext()).getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.contenedor, new SeleccionarButacasFragment(peliculaSelected)).addToBackStack("my_fragment").commit();
+            }
+        });
+
         Uri uri = Uri.parse(peliculaSelected.video);
         VideoView vvPelicula = view.findViewById(R.id.vvPelicula);
         vvPelicula.setMediaController(new MediaController(getContext()));
         vvPelicula.setVideoURI(uri);
         vvPelicula.requestFocus();
-        vvPelicula.start();
+        // vvPelicula.start();
 
         super.onViewCreated( view, savedInstanceState );
     }

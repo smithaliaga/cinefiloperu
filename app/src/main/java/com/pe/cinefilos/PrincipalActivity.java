@@ -19,6 +19,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.pe.cinefilos.fragment.DetallePeliculaFragment;
 import com.pe.cinefilos.fragment.ListarPeliculasFragment;
 import com.pe.cinefilos.fragment.MisDatosFragment;
+import com.pe.cinefilos.fragment.PagarFragment;
+import com.pe.cinefilos.fragment.SeleccionarButacasFragment;
 import com.pe.cinefilos.fragment.TriviaFragment;
 import com.pe.cinefilos.fragment.TriviaResultadoFragment;
 import com.pe.cinefilos.fragment.UbicacionCinesFragment;
@@ -45,7 +47,9 @@ public class PrincipalActivity extends AppCompatActivity
         TriviaFragment.OnFragmentInteractionListener,
         UbicacionCinesFragment.OnFragmentInteractionListener,
         DetallePeliculaFragment.OnFragmentInteractionListener,
-        TriviaResultadoFragment.OnFragmentInteractionListener {
+        TriviaResultadoFragment.OnFragmentInteractionListener,
+        SeleccionarButacasFragment.OnFragmentInteractionListener,
+        PagarFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +71,7 @@ public class PrincipalActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.contenedor, new MisDatosFragment()).commit();
+        fragmentManager.beginTransaction().replace(R.id.contenedor, new ListarPeliculasFragment()).commit();
 
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -92,10 +96,11 @@ public class PrincipalActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.principal, menu);
-        return true;
+        //getMenuInflater().inflate(R.menu.principal, menu);
+        return false;
     }
 
+    /*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         System.out.println("entro onOptionsItemSelected");
@@ -105,12 +110,13 @@ public class PrincipalActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_save) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+    */
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

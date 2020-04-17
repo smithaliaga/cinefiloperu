@@ -196,4 +196,33 @@ public class ApiService {
         conn = new Connection(URL + "/" + METHOD_NAME, p_handler, parameters);
         conn.startAsync();
     }
+
+    public void WS_GetListHorario(Context p_context, Handler p_handler, String token, long codigoCine, long codigoPelicula) {
+        String METHOD_NAME = p_context.getResources().getString(R.string.WS_GetListHorario);
+        String URL = p_context.getResources().getString(R.string.WS_url);
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("token", token);
+        parameters.put("codigoPelicula", codigoPelicula);
+        parameters.put("codigoCine", codigoCine);
+
+        parameters = AESManager.encryptParams(parameters);
+
+        conn = new Connection(URL + "/" + METHOD_NAME, p_handler, parameters);
+        conn.startAsync();
+    }
+
+    public void WS_GetListButaca(Context p_context, Handler p_handler, String token, long codigoSala) {
+        String METHOD_NAME = p_context.getResources().getString(R.string.WS_GetListButaca);
+        String URL = p_context.getResources().getString(R.string.WS_url);
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("token", token);
+        parameters.put("codigoSala", codigoSala);
+
+        parameters = AESManager.encryptParams(parameters);
+
+        conn = new Connection(URL + "/" + METHOD_NAME, p_handler, parameters);
+        conn.startAsync();
+    }
 }

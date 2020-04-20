@@ -16,6 +16,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.pe.cinefilos.fragment.ConstanciaFragment;
 import com.pe.cinefilos.fragment.DetallePeliculaFragment;
 import com.pe.cinefilos.fragment.ListarPeliculasFragment;
 import com.pe.cinefilos.fragment.MisDatosFragment;
@@ -24,6 +25,7 @@ import com.pe.cinefilos.fragment.SeleccionarButacasFragment;
 import com.pe.cinefilos.fragment.TriviaFragment;
 import com.pe.cinefilos.fragment.TriviaResultadoFragment;
 import com.pe.cinefilos.fragment.UbicacionCinesFragment;
+import com.pe.cinefilos.object.entities.RealizarPago;
 import com.pe.cinefilos.util.Shared;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -49,7 +51,8 @@ public class PrincipalActivity extends AppCompatActivity
         DetallePeliculaFragment.OnFragmentInteractionListener,
         TriviaResultadoFragment.OnFragmentInteractionListener,
         SeleccionarButacasFragment.OnFragmentInteractionListener,
-        PagarFragment.OnFragmentInteractionListener {
+        PagarFragment.OnFragmentInteractionListener,
+        ConstanciaFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

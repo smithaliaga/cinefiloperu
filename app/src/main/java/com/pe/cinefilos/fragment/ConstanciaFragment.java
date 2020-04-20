@@ -13,24 +13,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import com.pe.cinefilos.PrincipalActivity;
 import com.pe.cinefilos.R;
-import com.pe.cinefilos.bean.BeanButaca;
 import com.pe.cinefilos.bean.BeanCombo;
 import com.pe.cinefilos.object.entities.Butaca;
-import com.pe.cinefilos.object.entities.Cine;
 import com.pe.cinefilos.object.entities.GetMontoPago;
-import com.pe.cinefilos.object.entities.Horario;
+import com.pe.cinefilos.object.entities.MontoPago;
 import com.pe.cinefilos.object.entities.Movie;
-import com.pe.cinefilos.object.entities.RealizarPago;
+import com.pe.cinefilos.object.entities.Pago;
 import com.pe.cinefilos.object.entities.UserGetInformacion;
 import com.pe.cinefilos.service.ApiService;
 import com.pe.cinefilos.service.Connection;
@@ -39,9 +32,8 @@ import com.pe.cinefilos.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class PagarFragment extends Fragment {
+public class ConstanciaFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private Dialog pd;
@@ -49,13 +41,17 @@ public class PagarFragment extends Fragment {
     private BeanCombo cineSelected;
     private BeanCombo horarioSelected;
     private List<Butaca> asientosSelected;
+    private String tarjetaOfuscada;
+    private Pago pago;
 
-    public PagarFragment(Movie pelicula, BeanCombo cine, BeanCombo horario, List<Butaca> asientosSelected ) {
+    public ConstanciaFragment(Movie pelicula, BeanCombo cine, BeanCombo horario, List<Butaca> asientosSelected, Pago pago) {
         // Required empty public constructor
         this.peliculaSelected = pelicula;
         this.cineSelected = cine;
         this.horarioSelected = horario;
         this.asientosSelected = asientosSelected;
+        this.tarjetaOfuscada = tarjetaOfuscada;
+        this.pago = pago;
     }
 
     @Override
@@ -69,7 +65,7 @@ public class PagarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_pagar, container, false);
+        View view = inflater.inflate(R.layout.fragment_constancia, container, false);
         getActivity().setTitle(peliculaSelected.nombre);
         return view;
     }
@@ -88,40 +84,11 @@ public class PagarFragment extends Fragment {
         txtHorario.setText(horarioSelected.getDescripcion());
         txtSala.setText(horarioSelected.getDescripcionPadre());
 
-        Button btnGuardar = getView().findViewById(R.id.btnGuardar);
-        btnGuardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                guardar();
-            }
-        });
 
-        List<Long> butacas = new ArrayList<>();
-        for(Butaca butaca : asientosSelected) {
-            butacas.add(butaca.codigoButaca);
-        }
-
-        showDialog();
-        ApiService.GetInstance().WS_GetMontoPago(getContext(), handlerGetMontoPago, new Shared(getContext()).getToken(), horarioSelected.getCodigoPadre() , butacas);
+        //showDialog();
+        //ApiService.GetInstance().WS_GetMontoPago(getContext(), handlerGetMontoPago, new Shared(getContext()).getToken(), horarioSelected.getCodigoPadre() , butacas);
 
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.principal, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_save:
-                guardar();
-                break;
-        }
-        return true;
-
     }
 
     private Handler handlerGetMontoPago = new Handler() {
@@ -146,60 +113,6 @@ public class PagarFragment extends Fragment {
             }
         }
     };
-
-    private Handler handlerRealizarPago = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            try {
-                RealizarPago realizarPago = Connection.process_handler(msg, getContext(), RealizarPago.class);
-                if (realizarPago != null) {
-                    if (realizarPago.errorCode == 0) {
-
-                        FragmentManager fragmentManager = ((PrincipalActivity)getContext()).getSupportFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.contenedor, new ConstanciaFragment(peliculaSelected, cineSelected, horarioSelected, asientosSelected, realizarPago.pago)).addToBackStack("my_fragment").commit();
-
-                    } else {
-                        Util.dialog_msg(getActivity(), realizarPago.errorMessage).show();
-                    }
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            } finally {
-                hideDialog();
-            }
-        }
-    };
-
-    private void guardar() {
-        EditText txtNumeroTarjeta = getView().findViewById(R.id.txtNumeroTarjeta);
-        EditText txtMesVenc = getView().findViewById(R.id.txtMesVenc);
-        EditText txtAnioVenc = getView().findViewById(R.id.txtAnioVenc);
-        EditText txtCVV = getView().findViewById(R.id.txtCVV);
-
-        String numeroTarjeta = txtNumeroTarjeta.getText().toString().trim();
-        String mesVenc = txtMesVenc.getText().toString().trim();
-        String anioVenc = txtAnioVenc.getText().toString().trim();
-        String cVV = txtCVV.getText().toString().trim();
-
-        if (numeroTarjeta.isEmpty()) {
-            Util.dialog_msg(getActivity(), "Ingrese un número de tarjeta").show();
-        } else if (mesVenc.isEmpty()) {
-            Util.dialog_msg(getActivity(), "Ingrese mes de vencimiento").show();
-        } else if (anioVenc.isEmpty()) {
-            Util.dialog_msg(getActivity(), "Ingrese año de vencimiento").show();
-        } else if (cVV.isEmpty()) {
-            Util.dialog_msg(getActivity(), "Ingrese CVV").show();
-        } else {
-
-            List<Long> butacas = new ArrayList<>();
-            for(Butaca butaca : asientosSelected) {
-                butacas.add(butaca.codigoButaca);
-            }
-
-            showDialog();
-            ApiService.GetInstance().WS_RealizarPago(getContext(), handlerRealizarPago, new Shared(getContext()).getToken(), horarioSelected.getCodigoPadre() , butacas, numeroTarjeta, cVV, anioVenc, mesVenc);
-        }
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

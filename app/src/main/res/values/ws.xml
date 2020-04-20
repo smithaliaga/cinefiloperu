@@ -18,5 +18,7 @@
     <string name="WS_GetListCine">WS_GetListCine</string>
     <string name="WS_GetListHorario">WS_GetListHorario</string>
     <string name="WS_GetListButaca">WS_GetListButaca</string>
+    <string name="WS_GetMontoPago">WS_GetMontoPago</string>
+    <string name="WS_RealizarPago">WS_RealizarPago</string>
 
 </resources>

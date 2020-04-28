@@ -253,6 +253,7 @@ public class ApiService {
         parameters.put("cvv", cvv);
         parameters.put("anioVencimiento", anioVencimiento);
         parameters.put("mesVencimiento", mesVencimiento);
+        parameters.put("butacas", butacas);
 
         parameters = AESManager.encryptParams(parameters);
 

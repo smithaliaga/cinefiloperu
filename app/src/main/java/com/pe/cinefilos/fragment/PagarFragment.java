@@ -183,13 +183,19 @@ public class PagarFragment extends Fragment {
 
         if (numeroTarjeta.isEmpty()) {
             Util.dialog_msg(getActivity(), "Ingrese un número de tarjeta").show();
+        } else if (numeroTarjeta.length() < 14) {
+            Util.dialog_msg(getActivity(), "El número de tarjeta debe tener una longitud de 14 dígitos como mínimo").show();
         } else if (mesVenc.isEmpty()) {
             Util.dialog_msg(getActivity(), "Ingrese mes de vencimiento").show();
         } else if (anioVenc.isEmpty()) {
             Util.dialog_msg(getActivity(), "Ingrese año de vencimiento").show();
+        } else if (anioVenc.length() != 4) {
+            Util.dialog_msg(getActivity(), "El año de vencimiento debe tener 4 dígitos").show();
         } else if (cVV.isEmpty()) {
             Util.dialog_msg(getActivity(), "Ingrese CVV").show();
-        } else {
+        } else if (cVV.length() < 3) {
+            Util.dialog_msg(getActivity(), "El CVV debe tener una longitud de 3 carácteres").show();
+        }else {
 
             List<Long> butacas = new ArrayList<>();
             for(Butaca butaca : asientosSelected) {

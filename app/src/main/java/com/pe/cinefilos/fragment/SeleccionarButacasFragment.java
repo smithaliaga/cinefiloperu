@@ -111,6 +111,11 @@ public class SeleccionarButacasFragment extends Fragment {
                     }
                 }
 
+                if (asientosSeleccionados.isEmpty()) {
+                    Util.dialog_msg(getActivity(), "Por favor seleccione los asientos a reservar").show();
+                    return false;
+                }
+
                 FragmentManager fragmentManager = ((PrincipalActivity)getContext()).getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.contenedor, new PagarFragment(peliculaSelected, cineSelected, horarioSelected, asientosSeleccionados)).addToBackStack("my_fragment").commit();
                 break;

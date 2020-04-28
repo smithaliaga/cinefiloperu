@@ -66,7 +66,7 @@ public class ConstanciaFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_constancia, container, false);
-        getActivity().setTitle(peliculaSelected.nombre);
+        getActivity().setTitle("CONSTANCIA DE PAGO");
         return view;
     }
 
@@ -78,12 +78,25 @@ public class ConstanciaFragment extends Fragment {
         EditText txtCine = view.findViewById(R.id.txtCine);
         EditText txtHorario = view.findViewById(R.id.txtHorario);
         EditText txtSala = view.findViewById(R.id.txtSala);
+        EditText txtMontoPagar = view.findViewById(R.id.txtMontoPagar);
+        EditText txtNumeroTarjeta = view.findViewById(R.id.txtNumeroTarjeta);
+        EditText txtPelicula = view.findViewById(R.id.txtPelicula);
+        EditText txtAsientosReservados = view.findViewById(R.id.txtAsientosReservados);
 
         txtNumeroAsientos.setText(String.valueOf(asientosSelected.size()));
         txtCine.setText(cineSelected.getDescripcion());
         txtHorario.setText(horarioSelected.getDescripcion());
         txtSala.setText(horarioSelected.getDescripcionPadre());
+        txtMontoPagar.setText(String.valueOf(pago.total));
+        txtNumeroTarjeta.setText(pago.numeroTarjetaOfuscado);
+        txtPelicula.setText(peliculaSelected.nombre);
 
+        StringBuilder sb = new StringBuilder();
+        for (Butaca butaca : asientosSelected) {
+            sb.append(butaca.nombreButaca + ", ");
+        }
+
+        txtAsientosReservados.setText(sb.toString().substring(0, sb.toString().length() - 2));
 
         //showDialog();
         //ApiService.GetInstance().WS_GetMontoPago(getContext(), handlerGetMontoPago, new Shared(getContext()).getToken(), horarioSelected.getCodigoPadre() , butacas);

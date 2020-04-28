@@ -165,7 +165,7 @@
                         android:layout_weight="0.4"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="Número de asientos"
+                        android:text="Asientos reservados"
                         android:textSize="18dp" />
 
                 </LinearLayout>
@@ -176,7 +176,7 @@
                     android:layout_weight="0.6">
 
                     <EditText
-                        android:id="@+id/txtNumeroAsientos"
+                        android:id="@+id/txtAsientosReservados"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"

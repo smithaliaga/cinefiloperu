@@ -78,12 +78,18 @@ public class PagarFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         pd = Util.get_progress_dialog(getContext());
 
-        EditText txtNumeroAsientos = view.findViewById(R.id.txtNumeroAsientos);
+        EditText txtAsientosReservados = view.findViewById(R.id.txtAsientosReservados);
         EditText txtCine = view.findViewById(R.id.txtCine);
         EditText txtHorario = view.findViewById(R.id.txtHorario);
         EditText txtSala = view.findViewById(R.id.txtSala);
 
-        txtNumeroAsientos.setText(String.valueOf(asientosSelected.size()));
+        StringBuilder sb = new StringBuilder();
+        for (Butaca butaca : asientosSelected) {
+            sb.append(butaca.nombreButaca + ", ");
+        }
+
+        txtAsientosReservados.setText(sb.toString().substring(0, sb.toString().length() - 2));
+
         txtCine.setText(cineSelected.getDescripcion());
         txtHorario.setText(horarioSelected.getDescripcion());
         txtSala.setText(horarioSelected.getDescripcionPadre());
